@@ -21,6 +21,10 @@ const apiLimiter = rateLimit({
 // Apply the rate limiter specifically to our notes/AI routes
 app.use('/api/notes', apiLimiter, noteRoutes);
 
+app.get("/", (req, res) => {
+  res.send("AI Vault Backend is running successfully!");
+});
+
 // MongoDB Connection
 mongoose.connect(process.env.MONGODB_URI)
     .then(() => console.log('✅ Successfully connected to MongoDB'))
