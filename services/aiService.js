@@ -29,6 +29,32 @@ const generateSummary = async (content) => {
     }
 };
 
+// Paste this at Line 31
+const generateOnDemandSummary = async (content) => {
+  try {
+    const response = await axios.post("https://openrouter.ai/api/v1/chat/completions", {
+      model: "google/gemini-2.0-flash-001",
+      messages: [
+        { 
+          role: "system", 
+          content: "Summarize this technical note in 2-3 concise sentences focusing on core logic." 
+        },
+        { role: "user", content: content }
+      ]
+    }, {
+      headers: {
+        "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
+        "Content-Type": "application/json"
+      }
+    });
+
+    return response.data.choices[0].message.content;
+  } catch (error) {
+    console.error("On-Demand Summary Error:", error);
+    return "Could not generate summary.";
+  }
+};
+
 const generateQueryAnswer = async (note, question) => {
     try {
         const systemPrompt = "You are an AI assistant answering questions based strictly on the provided note context. Return a valid JSON object with a single key 'answer' containing your response.";
@@ -65,4 +91,4 @@ const generateQueryAnswer = async (note, question) => {
     }
 };
 
-module.exports = { generateSummary, generateQueryAnswer };
+module.exports = { generateSummary, generateQueryAnswer, generateOnDemandSummary };

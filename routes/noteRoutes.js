@@ -24,6 +24,20 @@ router.get('/:id', async (req, res) => {
     }
 });
 
+// 2.5 GET AI SUMMARY
+router.get('/:id/summary', async (req, res) => {
+  try {
+    const note = await Note.findById(req.params.id);
+    if (!note) return res.status(404).json({ error: "Note not found" });
+
+    const summary = await generateSummary(note.content);
+    res.json({ summary });
+  } catch (error) {
+    console.error("Summary Route Error:", error);
+    res.status(500).json({ error: "Failed to generate summary" });
+  }
+});
+
 // 3. DELETE NOTE (Required for CRUD)
 router.delete('/:id', async (req, res) => {
     try {
