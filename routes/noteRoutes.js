@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Note = require('../models/Note');
-const { generateSummary, generateQueryAnswer } = require('../services/aiService');
+const { generateSummary, generateQueryAnswer, generateOnDemandSummary } = require('../services/aiService');
 
 // 1. GET ALL NOTES
 router.get('/', async (req, res) => {
@@ -30,8 +30,8 @@ router.get('/:id/summary', async (req, res) => {
     const note = await Note.findById(req.params.id);
     if (!note) return res.status(404).json({ error: "Note not found" });
 
-    const summary = await generateSummary(note.content);
-    res.json({ summary });
+   const summaryText = await generateOnDemandSummary(note.content);
+    res.json({ summary: summaryText });
   } catch (error) {
     console.error("Summary Route Error:", error);
     res.status(500).json({ error: "Failed to generate summary" });
