@@ -60,21 +60,21 @@ const generateOnDemandSummary = async (content) => {
 
 const generateQueryAnswer = async (note, question) => {
   try {
-    // 1. Ask Tavily to find information on the web
+    // 1. Search the web for fresh info
     const searchData = await tvly.search(question, {
       searchDepth: "basic",
       maxResults: 3
     });
     
-    // 2. Clean up the search results into a string
-    const webResults = searchData.results.map(r => `${r.title}: ${r.content}`).join("\n");
+    const webContext = searchData.results.map(r => `${r.title}: ${r.content}`).join("\n");
 
-    // 3. Send both your Note and the Web Results to Gemini
-    const systemPrompt = "You are a research assistant. Use the provided Note Context AND Web Search results to answer. Return a valid JSON object with an 'answer' key.";
+    // 2. Updated prompt using both Note + Web data
+    const systemPrompt = "You are an AI research assistant. Use the provided Note Context AND Web Search results to answer. Return a valid JSON object with a key 'answer'.";
+    
     const userContent = `
       NOTE CONTEXT: ${note.content}
-      WEB SEARCH RESULTS: ${webResults}
-      QUESTION: ${question}
+      WEB SEARCH RESULTS: ${webContext}
+      USER QUESTION: ${question}
     `;
 
     const response = await axios.post("https://openrouter.ai/api/v1/chat/completions", {
@@ -93,8 +93,8 @@ const generateQueryAnswer = async (note, question) => {
 
     return JSON.parse(response.data.choices[0].message.content);
   } catch (error) {
-    console.error("Agent Search Error:", error);
-    return { answer: "I encountered an error while trying to search for that information." };
+    console.error("Search/Query Error:", error);
+    return { answer: "I encountered an error while searching for the answer." };
   }
 };
 
