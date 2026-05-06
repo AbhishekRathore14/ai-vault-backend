@@ -1,7 +1,9 @@
 # AI Knowledge Vault
 
-Live Application:https://ai-vault-frontend-ouezcg9l5-abhishek-rathores-projects-bcfced08.vercel.app/
+Live Application:https://ai-vault-frontend-liard.vercel.app/
+
 Backend API: https://ai-vault-backend-2hx1.onrender.com
+
 github backend : https://github.com/AbhishekRathore14/ai-vault-backend
 
 A full-stack AI-powered knowledge management system built with Next.js, Node.js, MongoDB, and OpenRouter (Gemini 2.0 Flash).
